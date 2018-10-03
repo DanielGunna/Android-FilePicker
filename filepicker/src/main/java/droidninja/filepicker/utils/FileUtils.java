@@ -13,52 +13,46 @@ import droidninja.filepicker.R;
 
 public class FileUtils {
 
-    public static FilePickerConst.FILE_TYPE getFileType(String path)
-    {
+    public static FilePickerConst.FILE_TYPE getFileType(String path) {
         String fileExtension = FilePickerUtils.getFileExtension(new File(path));
-        if(TextUtils.isEmpty(fileExtension))
+        if (TextUtils.isEmpty(fileExtension))
             return FilePickerConst.FILE_TYPE.UNKNOWN;
 
-        if(isExcelFile(path))
+        if (isExcelFile(path))
             return FilePickerConst.FILE_TYPE.EXCEL;
-        if(isDocFile(path))
+        if (isDocFile(path))
             return FilePickerConst.FILE_TYPE.WORD;
-        if(isPPTFile(path))
+        if (isPPTFile(path))
             return FilePickerConst.FILE_TYPE.PPT;
-        if(isPDFFile(path))
+        if (isPDFFile(path))
             return FilePickerConst.FILE_TYPE.PDF;
-        if(isTxtFile(path))
+        if (isTxtFile(path))
             return FilePickerConst.FILE_TYPE.TXT;
         else
-            return FilePickerConst.FILE_TYPE.UNKNOWN;
+            return FilePickerConst.FILE_TYPE.OTHERS;
     }
 
-    public static boolean isExcelFile(String path)
-    {
-        String[] types = {"xls","xlsx"};
+    public static boolean isExcelFile(String path) {
+        String[] types = {"xls", "xlsx"};
         return FilePickerUtils.contains(types, path);
     }
 
-    public static boolean isDocFile(String path)
-    {
-        String[] types = {"doc","docx", "dot","dotx"};
+    public static boolean isDocFile(String path) {
+        String[] types = {"doc", "docx", "dot", "dotx"};
         return FilePickerUtils.contains(types, path);
     }
 
-    public static boolean isPPTFile(String path)
-    {
-        String[] types = {"ppt","pptx"};
+    public static boolean isPPTFile(String path) {
+        String[] types = {"ppt", "pptx"};
         return FilePickerUtils.contains(types, path);
     }
 
-    public static boolean isPDFFile(String path)
-    {
+    public static boolean isPDFFile(String path) {
         String[] types = {"pdf"};
         return FilePickerUtils.contains(types, path);
     }
 
-    public static boolean isTxtFile(String path)
-    {
+    public static boolean isTxtFile(String path) {
         String[] types = {"txt"};
         return FilePickerUtils.contains(types, path);
     }

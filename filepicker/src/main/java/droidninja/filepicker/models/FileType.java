@@ -3,13 +3,15 @@ package droidninja.filepicker.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
+
 import droidninja.filepicker.R;
 
 /**
  * Created by droidNinja on 29/07/16.
  */
-public class FileType implements Parcelable{
+public class FileType implements Parcelable {
     public String title;
+    public boolean isAnyType;
 
     @DrawableRes
     public int drawable;
@@ -21,6 +23,14 @@ public class FileType implements Parcelable{
         this.extensions = extensions;
         this.drawable = drawable;
     }
+
+    public FileType(String title, String[] extensions, int drawable, boolean isAnyType) {
+        this.title = title;
+        this.extensions = extensions;
+        this.drawable = drawable;
+        this.isAnyType = isAnyType;
+    }
+
 
     protected FileType(Parcel in) {
         title = in.readString();
@@ -40,9 +50,8 @@ public class FileType implements Parcelable{
         }
     };
 
-    public int getDrawable()
-    {
-        if(drawable==0)
+    public int getDrawable() {
+        if (drawable == 0)
             return R.drawable.icon_file_unknown;
         return drawable;
     }
@@ -59,7 +68,8 @@ public class FileType implements Parcelable{
         parcel.writeStringArray(extensions);
     }
 
-    @Override public boolean equals(Object o) {
+    @Override
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
@@ -68,7 +78,8 @@ public class FileType implements Parcelable{
         return title != null ? title.equals(fileType.title) : fileType.title == null;
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         return title != null ? title.hashCode() : 0;
     }
 }

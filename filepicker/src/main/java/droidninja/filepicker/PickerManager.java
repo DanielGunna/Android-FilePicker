@@ -6,6 +6,7 @@ import droidninja.filepicker.models.BaseFile;
 import droidninja.filepicker.models.FileType;
 import droidninja.filepicker.models.sort.SortingTypes;
 import droidninja.filepicker.utils.Orientation;
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
@@ -13,249 +14,278 @@ import java.util.LinkedHashSet;
  * Created by droidNinja on 29/07/16.
  */
 public class PickerManager {
-  private static PickerManager ourInstance = new PickerManager();
-  private int maxCount = FilePickerConst.DEFAULT_MAX_COUNT;
-  private boolean showImages = true;
-  private int cameraDrawable = R.drawable.ic_camera;
-  private SortingTypes sortingType = SortingTypes.none;
+    private static PickerManager ourInstance = new PickerManager();
+    private int maxCount = FilePickerConst.DEFAULT_MAX_COUNT;
+    private boolean showImages = true;
+    private int cameraDrawable = R.drawable.ic_camera;
+    private SortingTypes sortingType = SortingTypes.none;
+    private int defaultFileDrawable;
+    private FileType othersFileType;
 
-  public static PickerManager getInstance() {
-    return ourInstance;
-  }
 
-  private ArrayList<String> mediaFiles;
-  private ArrayList<String> docFiles;
-
-  private LinkedHashSet<FileType> fileTypes;
-
-  private int theme = R.style.LibAppTheme;
-
-  private String title = null;
-
-  private boolean showVideos;
-
-  private boolean showGif;
-
-  private boolean showSelectAll = false;
-
-  private boolean docSupport = true;
-
-  private boolean enableCamera = true;
-
-  private Orientation orientation = Orientation.UNSPECIFIED;
-
-  private boolean showFolderView = true;
-
-  private String providerAuthorities;
-
-  private PickerManager() {
-    mediaFiles = new ArrayList<>();
-    docFiles = new ArrayList<>();
-    fileTypes = new LinkedHashSet<>();
-  }
-
-  public void setMaxCount(int count) {
-    reset();
-    this.maxCount = count;
-  }
-
-  public int getMaxCount() {
-    return maxCount;
-  }
-
-  public int getCurrentCount() {
-    return mediaFiles.size() + docFiles.size();
-  }
-
-  public void add(String path, int type) {
-    if (path != null && shouldAdd()) {
-      if (!mediaFiles.contains(path) && type == FilePickerConst.FILE_TYPE_MEDIA) {
-        mediaFiles.add(path);
-      } else if (!docFiles.contains(path) && type == FilePickerConst.FILE_TYPE_DOCUMENT) {
-        docFiles.add(path);
-      } else {
-        return;
-      }
+    public static PickerManager getInstance() {
+        return ourInstance;
     }
-  }
 
-  public void add(ArrayList<String> paths, int type) {
-    for (int index = 0; index < paths.size(); index++) {
-      add(paths.get(index), type);
+    private ArrayList<String> mediaFiles;
+    private ArrayList<String> docFiles;
+
+    private LinkedHashSet<FileType> fileTypes;
+
+    private int theme = R.style.LibAppTheme;
+
+    private String title = null;
+
+    private boolean showVideos;
+
+    private boolean showGif;
+
+    private boolean enableAllFileTypes = false;
+
+    private boolean showSelectAll = false;
+
+    private boolean docSupport = true;
+
+    private boolean enableCamera = true;
+
+    private Orientation orientation = Orientation.UNSPECIFIED;
+
+    private boolean showFolderView = true;
+
+    private String providerAuthorities;
+
+    private PickerManager() {
+        mediaFiles = new ArrayList<>();
+        docFiles = new ArrayList<>();
+        fileTypes = new LinkedHashSet<>();
     }
-  }
 
-  public void remove(String path, int type) {
-    if ((type == FilePickerConst.FILE_TYPE_MEDIA) && mediaFiles.contains(path)) {
-      mediaFiles.remove(path);
-    } else if (type == FilePickerConst.FILE_TYPE_DOCUMENT) {
-      docFiles.remove(path);
+    public void setMaxCount(int count) {
+        reset();
+        this.maxCount = count;
     }
-  }
 
-  public boolean shouldAdd() {
-    if (maxCount == -1) return true;
-    return getCurrentCount() < maxCount;
-  }
-
-  public ArrayList<String> getSelectedPhotos() {
-    return mediaFiles;
-  }
-
-  public ArrayList<String> getSelectedFiles() {
-    return docFiles;
-  }
-
-  public ArrayList<String> getSelectedFilePaths(ArrayList<BaseFile> files) {
-    ArrayList<String> paths = new ArrayList<>();
-    for (int index = 0; index < files.size(); index++) {
-      paths.add(files.get(index).getPath());
+    public int getMaxCount() {
+        return maxCount;
     }
-    return paths;
-  }
 
-  public void reset() {
-    docFiles.clear();
-    mediaFiles.clear();
-    fileTypes.clear();
-    maxCount = -1;
-  }
+    public int getCurrentCount() {
+        return mediaFiles.size() + docFiles.size();
+    }
 
-  public void clearSelections() {
-    mediaFiles.clear();
-    docFiles.clear();
-  }
+    public void add(String path, int type) {
+        if (path != null && shouldAdd()) {
+            if (!mediaFiles.contains(path) && type == FilePickerConst.FILE_TYPE_MEDIA) {
+                mediaFiles.add(path);
+            } else if (!docFiles.contains(path) && type == FilePickerConst.FILE_TYPE_DOCUMENT) {
+                docFiles.add(path);
+            } else {
+                return;
+            }
+        }
+    }
 
-  public void deleteMedia(ArrayList<String> paths) {
-    mediaFiles.removeAll(paths);
-  }
+    public void add(ArrayList<String> paths, int type) {
+        for (int index = 0; index < paths.size(); index++) {
+            add(paths.get(index), type);
+        }
+    }
 
-  public int getTheme() {
-    return theme;
-  }
+    public void remove(String path, int type) {
+        if ((type == FilePickerConst.FILE_TYPE_MEDIA) && mediaFiles.contains(path)) {
+            mediaFiles.remove(path);
+        } else if (type == FilePickerConst.FILE_TYPE_DOCUMENT) {
+            docFiles.remove(path);
+        }
+    }
 
-  public void setTheme(int theme) {
-    this.theme = theme;
-  }
+    public boolean shouldAdd() {
+        if (maxCount == -1) return true;
+        return getCurrentCount() < maxCount;
+    }
 
-  public String getTitle() {
-    return title;
-  }
+    public ArrayList<String> getSelectedPhotos() {
+        return mediaFiles;
+    }
 
-  public void setTitle(String title) {
-    this.title = title;
-  }
+    public ArrayList<String> getSelectedFiles() {
+        return docFiles;
+    }
 
-  public boolean showVideo() {
-    return showVideos;
-  }
+    public ArrayList<String> getSelectedFilePaths(ArrayList<BaseFile> files) {
+        ArrayList<String> paths = new ArrayList<>();
+        for (int index = 0; index < files.size(); index++) {
+            paths.add(files.get(index).getPath());
+        }
+        return paths;
+    }
 
-  public void setShowVideos(boolean showVideos) {
-    this.showVideos = showVideos;
-  }
+    public void reset() {
+        docFiles.clear();
+        mediaFiles.clear();
+        fileTypes.clear();
+        maxCount = -1;
+    }
 
-  public boolean showImages() {
-    return showImages;
-  }
+    public void clearSelections() {
+        mediaFiles.clear();
+        docFiles.clear();
+    }
 
-  public void setShowImages(boolean showImages) {
-    this.showImages = showImages;
-  }
+    public FileType getOthersFileType() {
+        return othersFileType;
+    }
 
-  public boolean isShowGif() {
-    return showGif;
-  }
+    public void deleteMedia(ArrayList<String> paths) {
+        mediaFiles.removeAll(paths);
+    }
 
-  public void setShowGif(boolean showGif) {
-    this.showGif = showGif;
-  }
+    public int getTheme() {
+        return theme;
+    }
 
-  public boolean isShowFolderView() {
-    return showFolderView;
-  }
+    public void setTheme(int theme) {
+        this.theme = theme;
+    }
 
-  public void setShowFolderView(boolean showFolderView) {
-    this.showFolderView = showFolderView;
-  }
+    public String getTitle() {
+        return title;
+    }
 
-  public void addFileType(FileType fileType) {
-    fileTypes.add(fileType);
-  }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-  public void addDocTypes() {
-    String[] pdfs = { "pdf" };
-    fileTypes.add(new FileType(FilePickerConst.PDF, pdfs, R.drawable.icon_file_pdf));
+    public boolean showVideo() {
+        return showVideos;
+    }
 
-    String[] docs = { "doc", "docx", "dot", "dotx" };
-    fileTypes.add(new FileType(FilePickerConst.DOC, docs, R.drawable.icon_file_doc));
+    public void setShowVideos(boolean showVideos) {
+        this.showVideos = showVideos;
+    }
 
-    String[] ppts = { "ppt", "pptx" };
-    fileTypes.add(new FileType(FilePickerConst.PPT, ppts, R.drawable.icon_file_ppt));
+    public int getDefaultFileDrawable() {
+        return defaultFileDrawable;
+    }
 
-    String[] xlss = { "xls", "xlsx" };
-    fileTypes.add(new FileType(FilePickerConst.XLS, xlss, R.drawable.icon_file_xls));
+    public void setDefaultFileDrawable(int defaultFileDrawable) {
+        this.defaultFileDrawable = defaultFileDrawable;
+    }
 
-    String[] txts = { "txt" };
-    fileTypes.add(new FileType(FilePickerConst.TXT, txts, R.drawable.icon_file_unknown));
-  }
+    public boolean showImages() {
+        return showImages;
+    }
 
-  public ArrayList<FileType> getFileTypes() {
-    return new ArrayList<>(fileTypes);
-  }
+    public void setShowImages(boolean showImages) {
+        this.showImages = showImages;
+    }
 
-  public boolean isDocSupport() {
-    return docSupport;
-  }
+    public boolean isShowGif() {
+        return showGif;
+    }
 
-  public void setDocSupport(boolean docSupport) {
-    this.docSupport = docSupport;
-  }
+    public void setShowGif(boolean showGif) {
+        this.showGif = showGif;
+    }
 
-  public boolean isEnableCamera() {
-    return enableCamera;
-  }
+    public boolean isShowFolderView() {
+        return showFolderView;
+    }
 
-  public void setEnableCamera(boolean enableCamera) {
-    this.enableCamera = enableCamera;
-  }
+    public void setShowFolderView(boolean showFolderView) {
+        this.showFolderView = showFolderView;
+    }
 
-  public Orientation getOrientation() {
-    return orientation;
-  }
+    public void addFileType(FileType fileType) {
+        fileTypes.add(fileType);
+    }
 
-  public void setOrientation(Orientation orientation) {
-    this.orientation = orientation;
-  }
+    public boolean getEnableAllFileTypes() {
+        return enableAllFileTypes;
+    }
 
-  public String getProviderAuthorities() {
-    return providerAuthorities;
-  }
+    public void setEnableAllFileTypes(boolean enableAllFileTypes) {
+        this.enableAllFileTypes = enableAllFileTypes;
+    }
 
-  public void setProviderAuthorities(String providerAuthorities) {
-    this.providerAuthorities = providerAuthorities;
-  }
+    public void addDocTypes() {
+        String[] pdfs = {"pdf"};
+        fileTypes.add(new FileType(FilePickerConst.PDF, pdfs, R.drawable.icon_file_pdf));
 
-  public void setCameraDrawable(int drawable) {
-    this.cameraDrawable = drawable;
-  }
+        String[] docs = {"doc", "docx", "dot", "dotx"};
+        fileTypes.add(new FileType(FilePickerConst.DOC, docs, R.drawable.icon_file_doc));
 
-  public int getCameraDrawable() {
-    return cameraDrawable;
-  }
+        String[] ppts = {"ppt", "pptx"};
+        fileTypes.add(new FileType(FilePickerConst.PPT, ppts, R.drawable.icon_file_ppt));
 
-  public boolean hasSelectAll() {
-    return maxCount == -1 && showSelectAll;
-  }
+        String[] xlss = {"xls", "xlsx"};
+        fileTypes.add(new FileType(FilePickerConst.XLS, xlss, R.drawable.icon_file_xls));
 
-  public void enableSelectAll(boolean showSelectAll) {
-    this.showSelectAll = showSelectAll;
-  }
+        String[] txts = {"txt"};
+        fileTypes.add(new FileType(FilePickerConst.TXT, txts, R.drawable.icon_file_unknown));
 
-  public SortingTypes getSortingType() {
-    return sortingType;
-  }
+        if (enableAllFileTypes) {
+            addFileType(othersFileType = new FileType(FilePickerConst.OTHERS, new String[]{"*"}, defaultFileDrawable, true));
+        }
+    }
 
-  public void setSortingType(SortingTypes sortingType) {
-    this.sortingType = sortingType;
-  }
+    public ArrayList<FileType> getFileTypes() {
+        return new ArrayList<>(fileTypes);
+    }
+
+    public boolean isDocSupport() {
+        return docSupport;
+    }
+
+    public void setDocSupport(boolean docSupport) {
+        this.docSupport = docSupport;
+    }
+
+    public boolean isEnableCamera() {
+        return enableCamera;
+    }
+
+    public void setEnableCamera(boolean enableCamera) {
+        this.enableCamera = enableCamera;
+    }
+
+    public Orientation getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(Orientation orientation) {
+        this.orientation = orientation;
+    }
+
+    public String getProviderAuthorities() {
+        return providerAuthorities;
+    }
+
+    public void setProviderAuthorities(String providerAuthorities) {
+        this.providerAuthorities = providerAuthorities;
+    }
+
+    public void setCameraDrawable(int drawable) {
+        this.cameraDrawable = drawable;
+    }
+
+    public int getCameraDrawable() {
+        return cameraDrawable;
+    }
+
+    public boolean hasSelectAll() {
+        return maxCount == -1 && showSelectAll;
+    }
+
+    public void enableSelectAll(boolean showSelectAll) {
+        this.showSelectAll = showSelectAll;
+    }
+
+    public SortingTypes getSortingType() {
+        return sortingType;
+    }
+
+    public void setSortingType(SortingTypes sortingType) {
+        this.sortingType = sortingType;
+    }
 }
