@@ -199,4 +199,9 @@ public class FilePickerBuilder {
 
         fragment.startActivityForResult(intent, requestCode);
     }
+
+    public FilePickerBuilder excludeExtensions(String[] strings) {
+        PickerManager.getInstance().setForbiddenExtensions(strings);
+        return this;
+    }
 }

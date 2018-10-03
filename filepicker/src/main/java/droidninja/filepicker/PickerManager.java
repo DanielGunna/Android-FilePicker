@@ -7,7 +7,6 @@ import droidninja.filepicker.models.FileType;
 import droidninja.filepicker.models.sort.SortingTypes;
 import droidninja.filepicker.utils.Orientation;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
 /**
@@ -21,6 +20,7 @@ public class PickerManager {
     private SortingTypes sortingType = SortingTypes.none;
     private int defaultFileDrawable;
     private FileType othersFileType;
+    private String[] forbiddenExtensions;
 
 
     public static PickerManager getInstance() {
@@ -287,5 +287,9 @@ public class PickerManager {
 
     public void setSortingType(SortingTypes sortingType) {
         this.sortingType = sortingType;
+    }
+
+    public void setForbiddenExtensions(String[] forbiddenExtensions) {
+        this.forbiddenExtensions = forbiddenExtensions;
     }
 }

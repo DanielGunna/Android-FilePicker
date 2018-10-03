@@ -139,10 +139,11 @@ public class DocScannerTask extends AsyncTask<Void, Void, Map<FileType, List<Doc
     }
 
     private FileType getFileType(ArrayList<FileType> types, String path) {
-        if (PickerManager.getInstance().getEnableAllFileTypes()) {
+        FileType fileType = findExtensionInTypes(types, path);
+        if (PickerManager.getInstance().getEnableAllFileTypes() && fileType == null) {
             return PickerManager.getInstance().getOthersFileType();
-        } else
-            return findExtensionInTypes(types, path);
+        }
+        return fileType;
     }
 
     private FileType findExtensionInTypes(ArrayList<FileType> types, String path) {
