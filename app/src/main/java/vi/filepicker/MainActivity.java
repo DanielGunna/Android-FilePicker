@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     Toast.LENGTH_SHORT).show();
         } else {
             FilePickerBuilder.getInstance()
-                    .enableAllFileTypes(R.drawable.pdf_blue)
+                    .enableAllFileTypes()
                     .excludeExtensions(new String[]{""})
                     //.setMaxCount(maxCount)
                     //.setSelectedFiles(docPaths)

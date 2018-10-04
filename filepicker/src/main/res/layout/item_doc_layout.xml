@@ -17,13 +17,13 @@
 
   <TextView
       android:id="@+id/file_type_tv"
-      android:layout_width="@dimen/file_icon_width"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       tools:text="PDF"
       android:textStyle="bold"
       android:textColor="@android:color/white"
       app:autoSizeTextType="uniform"
-      app:autoSizeMinTextSize="7sp"
+      app:autoSizeMinTextSize="4sp"
       app:autoSizeStepGranularity="1sp"
       android:layout_alignBottom="@+id/file_iv"
       android:layout_alignLeft="@+id/file_iv"

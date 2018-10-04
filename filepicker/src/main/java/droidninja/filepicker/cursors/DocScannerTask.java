@@ -12,12 +12,14 @@ import com.android.internal.util.Predicate;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import droidninja.filepicker.FilePickerConst;
 import droidninja.filepicker.PickerManager;
 import droidninja.filepicker.cursors.loadercallbacks.FileMapResultCallback;
 import droidninja.filepicker.models.Document;
@@ -57,7 +59,7 @@ public class DocScannerTask extends AsyncTask<Void, Void, Map<FileType, List<Doc
         for (final FileType fileType : fileTypes) {
             Predicate<Document> docContainsTypeExtension = new Predicate<Document>() {
                 public boolean apply(Document document) {
-                    return document.isThisType(fileType.extensions);
+                    return fileType.isAnyType || document.isThisType(fileType.extensions);
                 }
             };
             ArrayList<Document> documentListFilteredByType =
@@ -139,11 +141,40 @@ public class DocScannerTask extends AsyncTask<Void, Void, Map<FileType, List<Doc
     }
 
     private FileType getFileType(ArrayList<FileType> types, String path) {
+        String lastPathSegment = Uri.parse(path).getLastPathSegment();
+        if (!TextUtils.isEmpty(lastPathSegment)) {
+            int lastIndexDot = lastPathSegment.lastIndexOf(".");
+            if (lastIndexDot != -1) {
+                String fileExtension = lastPathSegment.substring(lastIndexDot).replace(".", "");
+                if (!TextUtils.isEmpty(fileExtension))
+                    return checkFileExtension(types, path, fileExtension);
+            }
+        }
+        return null;
+    }
+
+    private FileType checkFileExtension(ArrayList<FileType> types, String path, String fileExtension) {
         FileType fileType = findExtensionInTypes(types, path);
-        if (PickerManager.getInstance().getEnableAllFileTypes() && fileType == null) {
-            return PickerManager.getInstance().getOthersFileType();
+        if (!(ignoreFile(fileExtension)) && PickerManager.getInstance().getEnableAllFileTypes() && fileType == null) {
+            return getFileTypeFromExtension(fileExtension);
         }
         return fileType;
+    }
+
+    private FileType getFileTypeFromExtension(String fileExtension) {
+        String[] extensions = new String[1];
+        extensions[0] = fileExtension;
+        return new FileType(
+                fileExtension.toUpperCase(),
+                extensions,
+                PickerManager.getInstance().getOthersFileType().drawable
+        );
+    }
+
+    private boolean ignoreFile(String fileExtension) {
+        return PickerManager.getInstance().hasForbiddenExtensions() &&
+                PickerManager.getInstance().getForbiddenExtensions().contains(fileExtension) ||
+                Arrays.asList(FilePickerConst.imgExtensions).contains(fileExtension);
     }
 
     private FileType findExtensionInTypes(ArrayList<FileType> types, String path) {

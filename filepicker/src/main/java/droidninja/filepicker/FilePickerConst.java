@@ -38,6 +38,7 @@ public class FilePickerConst {
             Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
     public final static String[] docExtensions = {"ppt", "pptx", "xls", "xlsx", "doc", "docx", "dot", "dotx"};
+    public final static String[] imgExtensions = {"png", "jpg", "jpeg", "bmp"};
 
     public enum FILE_TYPE {
         PDF, WORD, EXCEL, PPT, TXT, UNKNOWN, OTHERS
@@ -48,5 +49,5 @@ public class FilePickerConst {
     public final static String DOC = "DOC";
     public final static String XLS = "XLS";
     public final static String TXT = "TXT";
-    public final static String OTHERS = "OTHERS";
+    public final static String ALL_FILES = "ALL";
 }

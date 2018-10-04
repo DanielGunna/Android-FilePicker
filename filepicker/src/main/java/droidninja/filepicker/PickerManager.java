@@ -1,5 +1,7 @@
 package droidninja.filepicker;
 
+import android.text.TextUtils;
+
 import java.util.ArrayList;
 
 import droidninja.filepicker.models.BaseFile;
@@ -7,6 +9,7 @@ import droidninja.filepicker.models.FileType;
 import droidninja.filepicker.models.sort.SortingTypes;
 import droidninja.filepicker.utils.Orientation;
 
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 
 /**
@@ -20,7 +23,8 @@ public class PickerManager {
     private SortingTypes sortingType = SortingTypes.none;
     private int defaultFileDrawable;
     private FileType othersFileType;
-    private String[] forbiddenExtensions;
+    private ArrayList<String> forbiddenExtensions;
+    private String allFilesTabTitle;
 
 
     public static PickerManager getInstance() {
@@ -99,6 +103,7 @@ public class PickerManager {
         }
     }
 
+
     public boolean shouldAdd() {
         if (maxCount == -1) return true;
         return getCurrentCount() < maxCount;
@@ -125,6 +130,8 @@ public class PickerManager {
         mediaFiles.clear();
         fileTypes.clear();
         maxCount = -1;
+        forbiddenExtensions.clear();
+        enableAllFileTypes = false;
     }
 
     public void clearSelections() {
@@ -168,6 +175,14 @@ public class PickerManager {
         return defaultFileDrawable;
     }
 
+    public ArrayList<String> getForbiddenExtensions() {
+        return forbiddenExtensions;
+    }
+
+    public void setForbiddenExtensions(ArrayList<String> forbiddenExtensions) {
+        this.forbiddenExtensions = forbiddenExtensions;
+    }
+
     public void setDefaultFileDrawable(int defaultFileDrawable) {
         this.defaultFileDrawable = defaultFileDrawable;
     }
@@ -196,6 +211,10 @@ public class PickerManager {
         this.showFolderView = showFolderView;
     }
 
+    public boolean hasForbiddenExtensions() {
+        return forbiddenExtensions != null && forbiddenExtensions.size() > 0;
+    }
+
     public void addFileType(FileType fileType) {
         fileTypes.add(fileType);
     }
@@ -221,11 +240,14 @@ public class PickerManager {
         String[] xlss = {"xls", "xlsx"};
         fileTypes.add(new FileType(FilePickerConst.XLS, xlss, R.drawable.icon_file_xls));
 
-        String[] txts = {"txt"};
-        fileTypes.add(new FileType(FilePickerConst.TXT, txts, R.drawable.icon_file_unknown));
-
         if (enableAllFileTypes) {
-            addFileType(othersFileType = new FileType(FilePickerConst.OTHERS, new String[]{"*"}, defaultFileDrawable, true));
+            addFileType(othersFileType = new FileType(
+                            TextUtils.isEmpty(allFilesTabTitle) ? FilePickerConst.ALL_FILES : allFilesTabTitle.toUpperCase(),
+                            new String[]{"*"},
+                            defaultFileDrawable == 0 ? R.drawable.icon_file_unknown : defaultFileDrawable,
+                            true
+                    )
+            );
         }
     }
 
@@ -290,6 +312,14 @@ public class PickerManager {
     }
 
     public void setForbiddenExtensions(String[] forbiddenExtensions) {
-        this.forbiddenExtensions = forbiddenExtensions;
+        this.forbiddenExtensions = new ArrayList<>(Arrays.asList(forbiddenExtensions));
+    }
+
+    public void setAllFilesTabTitle(String allFilesTabTitle) {
+        this.allFilesTabTitle = allFilesTabTitle;
+    }
+
+    public String getAllFilesTabTitle() {
+        return allFilesTabTitle;
     }
 }
