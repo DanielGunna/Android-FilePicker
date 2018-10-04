@@ -62,6 +62,7 @@ public class PickerManager {
         mediaFiles = new ArrayList<>();
         docFiles = new ArrayList<>();
         fileTypes = new LinkedHashSet<>();
+        forbiddenExtensions = new ArrayList<>();
     }
 
     public void setMaxCount(int count) {
