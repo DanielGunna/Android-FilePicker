@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         } else {
             FilePickerBuilder.getInstance()
                     .enableAllFileTypes()
-                    .excludeExtensions(new String[]{""})
+                    .excludeExtensions(new String[]{"mp3"})
                     //.setMaxCount(maxCount)
                     //.setSelectedFiles(docPaths)
                     .setActivityTheme(R.style.FilePickerTheme)
