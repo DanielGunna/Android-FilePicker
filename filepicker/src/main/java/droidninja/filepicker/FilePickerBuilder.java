@@ -88,6 +88,12 @@ public class FilePickerBuilder {
         return this;
     }
 
+    public FilePickerBuilder enableAllFileTypes(String tabTitle) {
+        PickerManager.getInstance().setEnableAllFileTypes(true);
+        PickerManager.getInstance().setAllFilesTabTitle(tabTitle);
+        return this;
+    }
+
     public FilePickerBuilder enableAllFileTypes(@DrawableRes int defaultDrawable) {
         PickerManager.getInstance().setEnableAllFileTypes(true);
         PickerManager.getInstance().setDefaultFileDrawable(defaultDrawable);
